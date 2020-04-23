@@ -1,0 +1,663 @@
+option java_package = "com.beiyou.game.proto";
+option java_outer_classname = "GameProto";
+
+/*********************  基础对象 ************************/
+
+
+message HuCardMap{
+	optional int32 key					 = 1; //键
+	optional int32 value				 = 2; //值
+}
+
+message HuHintDto {
+	optional int32 outCanHuCard			 = 1; //要打出的牌
+	repeated HuCardMap huCardMap		 = 2; //可以胡的牌
+}
+//牌
+message Card{
+	repeated int32 remainCards				= 1;//手牌
+	repeated int32 usedCards				= 2;//打出的牌
+	optional string disAct					= 3;//吃碰杠的牌
+}
+
+message User{
+	optional int32 userId					= 1; //用户ID
+	optional string nickname				= 2; //昵称 
+	optional string headImg					= 3; //头像
+	optional int32 sex						= 4; //性别
+	optional int32 state					= 5; //状态
+	optional string ip						= 6; //ip
+	optional string gps						= 7; //gps
+	optional int32 diamond                  = 8; //钻石
+	optional int32 position					= 9; //位置
+	optional int32 currentScore				= 10; //当前回合分
+	optional int32 totalScore				= 11; //总回合分
+	
+	optional int32 dianPaoNum			= 12; //点炮次数(输)
+	optional int32 jiePaoNum			= 13; //接炮次数(赢)
+	optional int32 zimoNum				= 14; //自摸次数
+	optional int32 angangNum			= 15; //暗杠次数
+	optional int32 minggangNum			= 16; //明杠次数
+	optional int32 huigangNum			= 17; //回杠次数
+	optional int32 pizigangNum			= 18; //痞子杠次数
+	optional int32 laizigangNum			= 19; //癞子杠次数
+	optional int32 taiZhuangNum			= 20; //抬庄次数(如果大于0就代表庄家被抬庄几次)
+	optional int32 fengding			    = 21; //1封顶2金顶
+	optional bool isLouhu				= 22; //是否漏胡
+	
+	optional bool isPeng				= 23; //是否碰牌(干嘛用来着?)
+	optional bool isAuto				= 24; //是否托管
+	repeated int32 remainCards			= 25; //手牌
+	repeated int32 usedCards			= 26; //打出去的牌
+	optional string disAct				= 27; //吃碰杠的牌
+	optional string drawAct				= 28; //摸牌后预动作
+	optional string act					= 29; //他人出牌后预动作
+	repeated HuHintDto huhintList		= 30; //听胡提示
+	optional int32 cardGrab				= 31; //发的牌,(游戏开始时庄家的第14张牌)
+	
+	optional int32 huType				= 32; //胡牌类型
+	optional int32 result				= 33; //胡牌结果(0:平局,1:点炮,2:自摸,3:抢杠,4:流局,5:杠开)
+	optional Card cards					= 34; //牌
+	
+	optional int32 onLine				= 35; //是否在线
+	optional int32 agree				= 36; //是否同意解散
+	
+	optional bool hasBaoTing				= 37; //是否已经报听
+	repeated int32 canUserCards				= 38; //能出的牌
+	repeated int32 baoTingCards				= 39; //报听的牌
+	
+	optional int32 jinghu				= 40; //是否禁胡(0未禁胡,1打皮禁胡 2打赖禁胡)
+	optional int32 beiScore             = 41; //玩家倍数
+	optional int32 maScore              = 42; //马分
+	
+	optional int32 coin                 = 43;//元宝
+	
+	optional int32 leagueCoin           = 44; //盟币
+}
+
+/*********************  请求对象 ************************/
+
+//创建
+message CreateTableRequest {
+	optional string sid					= 1; //sid
+	optional string tableId				= 2; //tableId
+	optional string gps					= 3; //gps
+
+}
+//加入
+message JoinTableRequest {
+	optional string sid					= 1; //sid
+	optional string tableId				= 2; //tableId
+	optional string gps					= 3; //gps
+}
+//用户准备
+message UserReadyRequest{
+	
+}
+//用户报听
+message UserBaoTingRequest{
+	optional int32 agree				= 1; //是否同意报听0:不同意,1:同意
+}
+//用户出牌
+message UserDiscardRequest{
+	optional int32 card				= 1;
+}
+
+//用户碰牌
+message UserPengCardRequest{
+	optional int32 card				= 1; //要碰的牌
+}
+
+//用户吃牌
+message UserChiCardRequest{
+	optional int32 card				= 1; //吃的哪张牌
+	repeated int32 cards			= 2; //要吃的牌组合
+}
+
+//用户杠牌
+message UserGangCardRequest{
+	optional int32 card				= 1; //要杠的牌
+}
+
+//用户胡牌
+message UserHuCardRequest{
+
+}
+
+//用户过牌
+message UserPassCardRequest{
+
+}
+//用户取消托管
+message UserCancelAutoRequest{
+
+}
+
+//玩家退出
+message UserQuitRequest {
+
+}
+
+//聊天
+message MessageRequest {
+      optional string content          = 1;//聊天内容
+      optional int32 toUserId          = 2;//目标用户（0表示自己） 
+}
+
+//退到后台
+message UserOnBackRequest {
+	optional int32 leaveState			= 1;//0:在线,1:离线
+}
+//申请解散请求
+message ApplyDismissRequest {
+
+}
+//是否同意解散请求
+message AgreeDismissRequest {
+	optional int32 agree             = 1; //1= 同意，2=不同意，3=申请
+}
+
+//用户重连请求
+message UserReconnectRequest {
+	optional int32 userId			= 1;	//userId
+}
+//延时检测
+message DelayCheckRequest {
+      optional string content          = 1;//内容
+}
+
+
+//所有请求接口
+message Request {
+	enum CMD {
+		UNKNOWN						= 0;
+		CREATE_TABLE				= 2000;  //创建桌子 CreateTableRequest, CreateTableResponse
+		JOIN_TABLE					= 2002;  //加入桌子 JoinTableRequest, JoinTableResponse
+		SEND_JOIN_TABLE				= 2005;  //推送 加入桌子信息 SendJoinTableResponse
+		
+		USER_READY					= 2006;  //玩家准备 UserReadyRequest
+		SEND_USER_READY				= 2007;  //玩家准备 SendUserReadyResponse, sendUserReadyResponse
+		
+		SEND_CARDS					= 2009;  //推送给每个玩家发牌 SendCardsResponse
+
+		USER_BAOTING				= 2026;  //玩家报听 UserBaoTingRequest		
+		SEND_USER_BAOTING			= 2027;  //推送玩家报听  SendUserBaoTingResponse		
+
+		SEND_PAI_DRAW				= 2025;  //推送 摸牌操作 SendDrawCardsResponse
+		
+		USER_DISCARD				= 2010;  //玩家出牌 UserDiscardRequest, UserDiscardResponse
+		SEND_USER_DISCARD			= 2011;  //推送玩家出牌 SendUserDiscardResponse
+		
+		USER_PENGCARD				= 2020;  //玩家碰牌 UserPengCardRequest, UserPengCardResponse
+		SEND_USER_PENGCARD			= 2021;  //推送玩家碰牌 SendUserPengCardResponse
+
+		USER_GANGCARD				= 2018;  //玩家杠牌 UserGangCardRequest, UserGangCardResponse
+		SEND_USER_GANGCARD			= 2019;  //推送玩家杠牌 SendUserGangCardResponse
+		
+		USER_HUCARD					= 2012;  //玩家胡牌 UserHuCardRequest, UserHuCardResponse
+		SEND_USER_HUCARD			= 2013;  //推送玩家胡牌 SendUserHuCardResponse
+
+		USER_PASSCARD				= 2022;  //玩家过牌 UserPassCardRequest, UserPassCardResponse
+		
+		USER_CHICARD				= 2028;  //玩家吃牌UserChiCardRequest
+		SEND_USER_CHICARD			= 2029;  //推送玩家吃牌 SendUserChiCardResponse
+
+		USER_QUIT					= 2044;  //玩家退出 UserQuitRequest
+		SEND_USER_QUIT              = 2045;  //推送玩家退出 SendUserQuitResponse
+		
+		
+		MESSAGE						= 2060;  //聊天 MessageRequest,
+		SEND_MESSAGE                = 2061;  //推送聊天信息 SendMessageResponse
+		USER_ONBACK					= 2080;  //用户退到后台  UserOnBackRequest
+		SEND_USER_ONBACK            = 2081;  //推送退到后台 SendUserOnBackResponse
+		APPLY_DISMISS				= 2040;  //申请解散 ApplyDismissRequest
+		SEND_APPLY_DISMISS			= 2041;  //申请解散 推送 SendApplyDismissResponse
+		AGREE_DISMISS				= 2042;  //是否同意解散牌桌 AgreeDismissRequest
+		SEND_AGREE_DISMISS			= 2043;  //是否同意解散 推送  SendAgreeDismissResponse
+		SEND_DISMISS_RESULT			= 2047;  //解散结果  推送 SendDismissResultResponse
+
+		SEND_ROUND_RECORD			= 2015;  //推送 回合结算 SendRoundRecordResponse
+		SEND_GAME_OVER				= 2017;  //推送总结算 SendGameOverResponse
+		SEND_DIAMOND_CHANGE			= 2071;  //推送钻石变化 SendDiamondChangeResponse
+		
+		USER_RECONNECT				= 2030;  //玩家重连 UserReconnectRequest, UserReconnectResponse
+		SEND_USER_RECONNECT			= 2031;  //推送重连信息 SendUserReconnectResponse
+		SEND_RECONNECT_QUIT			= 2035;  //玩家重连回到大厅 SendReconnectQuitResponse
+     
+		DELAY_CHECK					= 20010; //客户端延时检测  DelayCheckRequest, DelayCheckResponse 
+		
+		CANCEL_AUTO					= 20012; //玩家取消托管  UserCancelAutoRequest 
+		SEND_AUTO_STATE				= 20013; //推送玩家取消托管  SendAutoStateResponse 
+
+		SEND_REMAIN_TIME			= 20015; //推送倒计时  SendRemainTimeResponse 
+		SEND_USERQUIT_BY_ADMIN		= 21003; //通知客户端有人被后台踢出  SendUserQuitByAdminResponse 
+		
+		SEND_HEART_BEAT				= 10000; //推送心跳 SendHeartBeatResponse
+		
+		SEND_RECHARGE_CLIENT        = 20053; //充值通知客户端   SendRechargeClientResponse
+    }
+    optional CMD	cmd										= 1;      //访问接口
+    optional CreateTableRequest	createTableRequest			= 2;      //创建牌桌
+    optional JoinTableRequest	joinTableRequest			= 3;      //加入牌桌
+	optional UserReadyRequest userReadyRequest				= 4;	  //用户准备
+	optional UserBaoTingRequest userBaoTingRequest			= 5;	  //用户报听
+	optional UserDiscardRequest userDiscardRequest			= 6;	  //用户出牌
+	optional UserPengCardRequest userPengCardRequest		= 7;	  //用户碰牌
+	optional UserGangCardRequest userGangCardRequest		= 8;	  //用户杠牌
+	optional UserHuCardRequest userHuCardRequest			= 9;	  //用户胡牌
+	optional UserPassCardRequest userPassCardRequest		= 10;	  //用户过牌
+    optional UserQuitRequest userQuitRequest                = 11;     //玩家退出
+	
+    optional MessageRequest messageRequest                  = 12;     //聊天
+    optional UserOnBackRequest userOnBackRequest            = 13;     //用户切换到后台
+    optional ApplyDismissRequest applyDismissRequest		= 14;     //申请解散
+    optional AgreeDismissRequest agreeDismissRequest		= 15;     //是否同意解散牌桌
+    
+    optional UserReconnectRequest userReconnectRequest		= 16;     //重连
+    optional DelayCheckRequest delayCheckRequest            = 17;     //延时检测
+   
+    optional UserCancelAutoRequest userCancelAutoRequest	= 18;     //取消托管
+    
+    optional UserChiCardRequest userChiCardRequest			= 19;	  //用户吃牌
+
+	extensions 500 to 1000;
+}
+
+//充值推送给客户端
+message SendRechargeClientResponse {
+    optional int32 coin                 = 1;
+    optional int32 userId               = 2;
+    optional int32 position             = 3;
+    optional  int32 leagueCoin          = 4; 
+}
+
+/*********************  返回数据 ************************/
+
+//创建房间的返回
+message CreateTableResponse {
+	optional string tableId						= 1; //
+	optional int32 owner						= 2; //桌主  
+	optional int32 state						= 3; //状态  
+	optional int32 totalRound					= 4; //总回合数  
+	optional int32 currentRound					= 5; //当前回合数
+	optional string gameInfo					= 6;
+	optional int32 gameId						= 7;
+	optional int32 position                     = 8;
+	repeated User users							= 9; //其它用户状态信息{userId,nickname,headImg,sex,ip,gps,position,totalScre},state.agree,onLine}
+}
+
+//加入房间的返回
+message JoinTableResponse {
+	optional string tableId						= 1; //
+	optional int32 owner						= 2; //桌主  
+	optional int32 state						= 3; //状态  
+	optional int32 totalRound					= 4; //总回合数  
+	optional int32 currentRound					= 5; //当前回合数
+	optional string gameInfo					= 6;
+	optional int32 gameId						= 7;
+	optional int32 position                     = 8;
+	repeated User users							= 9; //其它用户状态信息{userId,nickname,headImg,sex,ip,gps,position,totalScre},state.agree,onLine}
+}
+//加入桌子--推送信息
+message SendJoinTableResponse {
+	optional User user							= 1;
+}
+
+//玩家准备的返回
+message SendUserReadyResponse {
+	optional int32 userId			= 1; //用户ID
+	optional int32 state			= 2; //状态  
+	repeated User  users			= 3; //其它用户状态信息{userId,state}
+}
+
+//发牌推送
+message SendCardsResponse {
+	optional int32 zhuangPos		= 1;
+	optional int32 currentRound		= 2;
+	optional int32 state			= 3;
+	optional int32 remainCardsNum	= 4;
+	optional int32 nextDiscardPos	= 5;
+	
+	optional int32 fanCard			= 6; //翻牌(用不上)
+	optional int32 laiCard			= 7; //癞子牌
+	repeated int32 piCard			= 8; //痞子
+	repeated User users				= 9; //{userId,position,state,totalScore,cradGrab,remainCards,canUserCards.baoTingCards}
+}
+
+//推送玩家报听
+message SendUserBaoTingResponse {
+	repeated User  users			= 3; //其它用户状态信息{userId,state,hasBaoTing,canUserCards,baoTingCards}
+}
+
+//推送摸牌
+message SendDrawCardsResponse {
+	optional int32 userId					= 1;
+	optional int32 nextDiscardPos			= 2; //下个出牌位置
+	repeated int32 drawCardUserUsedCards	= 3; //摸牌玩家出过的牌
+	optional string drawCardUserDicAct		= 4; //摸牌玩家吃碰杠的牌
+	optional int32 remainCardsNum			= 5; //剩余牌张数
+	//	
+	repeated int32 canUserCards				= 6; //摸牌玩家可以出的牌
+	repeated HuHintDto huhintList			= 7; //听胡提示
+	optional string act						= 8; //摸牌后预动作(杠,过,胡,出)
+	repeated int32 drawCardUserRemainCards	= 9; //摸牌玩家手牌
+	optional int32 card						= 10; //摸得牌
+	optional bool hasBaoTing				= 11; //是否报听
+	optional bool isActionLock				= 12; //是否锁操作
+}
+
+//推送用户出牌
+message SendUserDiscardResponse {
+	optional int32 card						= 1; //出的牌
+	optional int32 userId					= 2; //出牌人id
+	repeated int32 disCardUserremainCards	= 3; //出牌玩家手牌
+	repeated int32 disCardUserUsedCards		= 4; //出牌玩家出过的牌
+	optional string disCardUserdisAct		= 5; //出牌玩家吃碰杠的牌
+	
+	optional bool isLouHu					= 6; //接受者是否漏胡
+	optional string act						= 7; //接受者预动作(杠,过,胡,出)
+	optional int32 isJingHu					= 8; //是否禁胡(0未禁胡,1打皮禁胡 2打赖禁胡)针对userId
+	optional int32 beiScore                 = 9; //玩家倍数
+	optional int32 taiZhuangNum              = 10;//抬庄次数(针对庄家)
+}
+
+//推送用户碰牌
+message SendUserPengCardResponse {
+	optional int32 discardUserId			= 1; //出牌人id
+	optional int32 discard					= 2; //碰的牌
+	optional int32 userId					= 3; //点碰的人
+	optional int32 nextDiscardPos			= 4; //下一个操作者位置
+	
+	repeated int32 remainCards				= 5; //碰牌玩家手牌(0)
+	repeated int32 usedCards				= 6; //碰牌玩家打出的牌
+	optional string disAct					= 7; //碰牌玩家吃碰杠的牌
+	
+	repeated HuHintDto huhintList			= 8; //碰牌玩家听胡提示
+	repeated int32 canUserCards				= 9; //碰牌玩家可以出的牌
+	optional int32 beiScore                 = 10; //玩家倍数
+}
+
+//推送用户吃牌
+message SendUserChiCardResponse {
+	optional int32 discardUserId			= 1; //出牌人id
+	optional int32 discard					= 2; //吃的牌
+	optional int32 userId					= 3; //点吃的人
+	optional int32 nextDiscardPos			= 4; //下一个操作者位置
+	
+	repeated int32 remainCards				= 5; //吃牌玩家手牌(0)
+	repeated int32 usedCards				= 6; //吃牌玩家打出的牌
+	optional string disAct					= 7; //吃牌玩家吃碰杠的牌
+	
+	repeated HuHintDto huhintList			= 8; //吃牌玩家听胡提示
+	repeated int32 canUserCards				= 9; //吃牌玩家可以出的牌
+	optional int32 beiScore                 = 10; //玩家倍数
+}
+
+//推送用户杠牌
+message SendUserGangCardResponse {
+	optional int32 discardUserId			= 1; //放杠人id
+	optional int32 discard					= 2; //杠的牌
+	optional int32 type						= 3; //1:明杠,2:回杠,3:暗杠
+	optional int32 userId					= 4; //谁杠的
+	repeated int32 remainCards				= 5; //杠牌玩家手牌(0)
+	repeated int32 usedCards				= 6; //碰牌玩家打出的牌
+	optional string disAct					= 7; //吃碰杠的牌
+	optional int32 beiScore                 = 8; //玩家倍数
+}
+
+//推送用户胡牌
+message SendUserHuCardResponse {
+	optional int32 userId					= 1; //胡牌玩家
+	optional int32 discardUserId			= 2; //放炮玩家(自摸就是自己)
+	optional int32 huResult					= 3; //胡牌结果(0:平局,1:点炮,2:自摸,3:抢杠,4:流局,5:杠开)
+	optional int32 discard					= 4; //胡的牌
+}
+
+//用户过牌
+message UserPassCardResponse {
+	optional int32 userId					= 1; //点过玩家
+	optional int32 nextDiscardPos			= 2; //下一个出牌位置
+	repeated int32 canUserCards				= 3; //摸牌点过的玩家可以出的牌
+}
+
+//用户托管状态
+message SendAutoStateResponse {
+	optional int32 userId					= 1; //
+	optional bool isAuto					= 2; //是否托管
+}
+
+
+//推送退出--消息
+message SendUserQuitResponse {
+	optional int32 userId			= 1;
+	optional string nickname		= 2;
+	optional int32 position			= 3;
+	optional string message			= 4;
+	optional string tableId			= 5;
+	optional bool isOwnerQuit		= 6;
+}
+
+
+//******************************************************
+//推送聊天信息
+message SendMessageResponse {
+	optional int32 userId            = 1;
+	optional string content          = 2;
+	optional int32 toUserId          = 3;
+}
+
+//退到后台
+message SendUserOnBackResponse {
+	optional int32 userId			= 1;
+	optional int32 leaveState		= 2;
+}
+
+//申请牌桌解散--推送消息
+message SendApplyDismissResponse {
+       optional int32 userId          = 1;
+       optional int32 applicant       = 2;
+       optional int32 agree           = 3;
+       optional int32 applyTime       = 4;
+       optional int64 startApplyTime  = 5;
+}
+//是否同意牌桌解散--推送消息
+message SendAgreeDismissResponse {
+       optional int32 userId          = 1;
+       optional int32 applicant       = 2;
+       optional int32 agree           = 3; //0:默认,1:同意,2:不同意,3:申请
+}
+//牌桌解散结果--推送消息
+message SendDismissResultResponse {
+       optional int32 applicant			= 1;
+       optional int32 res				= 2;
+       optional int32 notAgreeUserId	= 3; //不同意解散玩家id
+}
+
+//回合结算推送
+message SendRoundRecordResponse {
+	optional int32 zhuangPos			= 1; //庄家位置
+	optional int32 currentRound			= 2; //当前回合
+	optional int32 totalRound			= 3; //总回合
+	optional int32 state				= 4; //状态
+	optional string time				= 5; //结算时间
+	optional string gameInfo			= 6; //
+	repeated int32 winners				= 7; //赢家
+	optional int32 huResult				= 8; //胡牌结果(0:平局,1:点炮,2:自摸,4:流局,5:杠开)
+	repeated int32 winnerHuType			= 9; //赢家胡牌牌型
+	optional int32 difenType		    = 10; //0软屁胡  1硬屁胡 2小血 3硬小血 4大血 5一点  6两点 7三点 8四点 9五点 10六点 11七点 12八点
+	optional int32 discardUserId		= 11; //放炮玩家id
+	optional int32 discard				= 12; //胡的牌
+	optional int32 fanCard				= 13; //翻的牌
+	optional int32 laiziCard			= 14; //癞子
+	repeated int32 piziCard				= 15; //痞子
+	optional int32 mapai			    = 16; //马牌
+	optional bool isGangKai			    = 17; //是否杠开
+	optional bool isGangHouPao			= 18; //是否杠后炮
+	repeated int32 remainCards			= 19; //剩下的牌
+	repeated User users					= 20; //玩家信息(all)
+}
+//推送总结算
+message SendGameOverResponse {
+      optional int32 state             = 1;
+      optional int32 owner             = 2;
+      optional int32 totalRound        = 3;
+      optional int32 currentRound      = 4;
+      optional string time             = 5;
+      optional int32 agId              = 6;
+      repeated User users              = 7; //(all)
+      optional int32 ruleId            = 8;
+}
+//推送钻石变化
+message SendDiamondChangeResponse {
+      optional int32 userId            = 1;
+      optional int32 diamond           = 2;
+}
+
+//玩家重连返回
+message UserReconnectResponse {
+	optional string tableId					= 1;
+	optional int32 gameId					= 2;
+	optional int32 state					= 3;
+	optional int32 owner					= 4;
+	optional int32 currentRound				= 5;
+	optional int32 totalRound				= 6;
+	optional string gameInfo				= 7;
+	optional int32 applicant				= 8;
+	optional int32 applyTime				= 9;
+	optional int64 startApplyTime			= 10;
+	optional int32 zhuangPos				= 11;
+	optional int32 remainCardsNum			= 12;
+	optional int32 discardPos				= 13;
+	optional int32 discard					= 14;
+	optional int32 nextDiscardPos			= 15;
+      
+	optional int32 fanCard					= 16;
+	optional int32 laiCard			        = 17; //癞子牌
+	repeated int32 piCard					= 18; //痞子
+	repeated User users						= 19; //(all)
+	
+	optional int32 position                 = 20;
+	optional int32 agId              		= 21;
+}
+//推送重连信息
+message SendUserReconnectResponse {
+      optional int32 userId            = 1;
+      optional int32 onLine            = 2;
+}
+//玩家重连回到大厅
+message SendReconnectQuitResponse {
+      optional int32 userId            = 1;
+}
+
+//延时检测
+message DelayCheckResponse {
+      optional string content          = 1;
+}
+
+//倒计时
+message SendRemainTimeResponse {
+      optional int32 time			= 1;//剩余时间
+      optional int32 type			= 2;
+      optional int32 userId			= 3;
+}
+//通知玩家被后台踢出
+message SendUserQuitByAdminResponse {
+      optional int32 userId				= 1;
+}
+
+//心跳
+message SendHeartBeatResponse {
+	optional  int64 currentTime			= 1;
+}
+
+//********************************************************
+
+//所有应答接口
+message Response {
+    enum ErrorCode {
+        NO_ERROR							= 0;                        // 返回没有错误发生  
+		CREATE_TABLE_ERROR					= 3002;						//创建牌桌失败
+		TABLE_NOTFIND_ERROR					= 3003;						//牌桌不存在
+		GAME_START_ERROR					= 3004;						//牌桌已经开始
+		USER_IP_SAME_ERROR					= 3005;						//该房间限制同IP加入，请联系房主！
+		GPS_LIMIT_ERROR						= 3006;						//加入该房间需开启GPS，请开启GPS后重新登录或联系房主！
+		TABLE_NO_POSITION_ERROR				= 3007;						//此房间已经人满
+		NOT_IN_TABLE_ERROR					= 3008;			//未加入此房间
+		USER_REARY_ERROR					= 3009;			//玩家人数不足或玩家未准备,请稍后再试
+		USER_READYNUM_ERROE					= 3010;						//玩家人数异常
+		USER_NORHAVE_CARD					= 3011;						//玩家没有这张牌
+		DISCARD_ERROR						= 3012;						//出牌失败
+		USER_DISCARD_NOPASS					= 3013;						//出牌失败，未Pass
+		HUPAI_ERROR							= 3014;						//胡牌失败
+		GANGPAI_ERROR						= 3015;						//杠牌失败
+		PENGPAI_ERROR						= 3016;						//过牌失败
+		PASS_ERROR							= 3017;						//碰牌失败
+		WAITING_RESOPNSE					= 3018;						//等待其他玩家响应
+		CANCELAUTO_ERROR					= 3019;						//取消托管异常
+		USER_AUTO_STATE_ERROR				= 3020;						//用户已经是未托管状态
+		USER_AUTO_ERROR						= 3021;						//先取消托管
+		USER_QUIT_ERROR						= 3023;                     // 玩家退出异常
+		NOT_ALLOW_QUIT						= 3024;                     // 无法退出房间
+		DISMISS_TABLE_ERROR					= 3025;                     // 申请解散失败
+		AGREE_DISMISS_TABLE_ERROR			= 3026;                     // 提交同意解散失败
+		RECONNET_ERROR						= 3027;                     // 重连错误
+		SEND_MESSAGE_ERROR					= 3028;                     // 发送信息失败
+		USER_ONBACK_ERROR					= 3029;                     // 用户退后台消息
+		DELAY_CHECK_ERROR					= 3030;                     // 延时检测异常
+		BAOTING_ERROR						= 3031;                     // 报听异常
+		USER_NOT_EXIT						= 3032;                     // 玩家不存在
+       	CHIPAI_ERROR						= 3033;						// 吃牌失败
+       	ENOUGH_ERROR                        = 3034;                     //余额不足
+       	LEAGUE_COIN_NO_ENOUGH               = 3088;                     //创建和加入失败,体力不够       	
+    }
+    optional ErrorCode error											= 1 [default = NO_ERROR];   // 表示本次请求状态
+    optional int64 serverTime											= 2;                        // 服务器时间
+    optional Request.CMD     cmd										= 3;                        // 接口
+    optional SendJoinTableResponse sendJoinTableResponse				= 4;                       //推送加入桌子信息
+    optional CreateTableResponse createTableResponse					= 5;                       //创建房间的返回
+    optional JoinTableResponse joinTableResponse						= 6;                       //加入房间的返回
+    optional SendUserReadyResponse sendUserReadyResponse				= 8;                       //推送玩家准备
+    optional SendCardsResponse sendCardsResponse						= 9;                       //推送发牌
+    optional SendUserBaoTingResponse sendUserBaoTingResponse			= 11;                       //推送玩家报听
+    optional SendDrawCardsResponse sendDrawCardsResponse				= 12;                       //推送摸牌
+    optional SendUserDiscardResponse sendUserDiscardResponse			= 14;                       //推送玩家出牌
+    optional SendUserPengCardResponse sendUserPengCardResponse			= 15;						//推送玩家碰牌
+    optional SendUserGangCardResponse sendUserGangCardResponse			= 16;						//推送玩家杠牌
+    optional SendUserHuCardResponse sendUserHuCardResponse				= 17;                       //推送玩家胡牌
+    optional UserPassCardResponse userPassCardResponse					= 18;                       //玩家过牌的返回
+    
+    optional SendUserChiCardResponse sendUserChiCardResponse			= 26;						//推送玩家吃牌
+    
+    optional SendUserQuitResponse sendUserQuitResponse					= 19;                       //推送玩家退出
+    
+	optional SendMessageResponse sendMessageResponse					= 20;                       //推送聊天内容
+   
+    optional SendApplyDismissResponse sendApplyDismissResponse			= 21;                  		 //推送申请解散
+    
+    optional SendAgreeDismissResponse sendAgreeDismissResponse			= 22;							//推送是否同意牌桌解散
+    
+    optional SendDismissResultResponse sendDismissResultResponse		= 23;							//推送桌子解散结果
+    
+    optional SendRoundRecordResponse sendRoundRecordResponse			= 24;							//单局结算
+    optional SendGameOverResponse sendGameOverResponse					= 25;							//总结算
+    
+    optional UserReconnectResponse userReconnectResponse				= 28;							//重连信息返回
+    optional SendUserReconnectResponse sendUserReconnectResponse		= 29;							//推送重连信息
+    optional SendReconnectQuitResponse sendReconnectQuitResponse		= 30;							//推送重连回到大厅
+   
+    
+    optional SendDiamondChangeResponse sendDiamondChangeResponse		= 31;							//推送钻石变化
+    
+    optional SendUserOnBackResponse sendUserOnBackResponse				= 32;							//退到后台
+    	
+    optional DelayCheckResponse delayCheckResponse						= 33;							//延时检测返回
+    
+    optional SendAutoStateResponse sendAutoStateResponse				= 34;							//托管状态
+    optional SendRemainTimeResponse sendRemainTimeResponse				= 35;							//倒计时
+    optional SendUserQuitByAdminResponse sendUserQuitByAdminResponse	= 36;							//通知被后台踢出
+    
+    optional SendHeartBeatResponse sendHeartBeatResponse				= 37;							//心跳
+    
+    optional SendRechargeClientResponse sendRechargeClientResponse          = 49;  
+    extensions 500 to 1000;
+}
