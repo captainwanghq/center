@@ -16,7 +16,7 @@ function MainScene:onEnter( ... )
     event.name = "event1"
     event.pars = {msg="ttf1"}
     self:emit(event)
-    lanuch_module("game.20003")
+    lanuch_module("game.20002")
 end
 
 function MainScene:test( event )

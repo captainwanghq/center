@@ -26,3 +26,5 @@ CC_DESIGN_RESOLUTION = {
 }
 
 CS_FIRST_GAME = "center.10001"
+
+CS_WRITABLE_ROOT_PATH = "c:/xxxxxgame/"

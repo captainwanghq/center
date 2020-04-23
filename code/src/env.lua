@@ -8,10 +8,10 @@ end
 local function getWritablePath()
     local nTargetPlatform = cc.Application:getInstance():getTargetPlatform()
     if 0 == nTargetPlatform then
-        if not cc.FileUtils:getInstance():isDirectoryExist("c:/xxxxxgame/") then 
-            cc.FileUtils:getInstance():createDirectory("c:/xxxxxgame/")
+        if not cc.FileUtils:getInstance():isDirectoryExist(CS_WRITABLE_ROOT_PATH) then 
+            cc.FileUtils:getInstance():createDirectory(CS_WRITABLE_ROOT_PATH)
         end
-        cc.FileUtils:getInstance():setWritablePath("c:/xxxxxgame/")
+        cc.FileUtils:getInstance():setWritablePath(CS_WRITABLE_ROOT_PATH)
     end
     return cc.FileUtils:getInstance():getWritablePath()
 end
@@ -188,7 +188,7 @@ function lanuch_module(module_name,callback)
     local gameInfo = csgame.findGameInfo(module_name)
     if not gameInfo then 
         print('启动['..module_name.."]失败")
-        install_module("center.10001",function(app)
+        install_module(CS_FIRST_GAME,function(app)
             -- body
             lanuch_module(app,callback)
         end)
