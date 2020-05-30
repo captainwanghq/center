@@ -28,8 +28,8 @@ local director = cc.Director:getInstance()
 local view = director:getOpenGLView()
 
 if not view then
-    local width = 640
-    local height = 960
+    local width = 960
+    local height = 640
     if CC_DESIGN_RESOLUTION then
         if CC_DESIGN_RESOLUTION.width then
             width = CC_DESIGN_RESOLUTION.width
@@ -149,7 +149,7 @@ function display.setAutoScale(configs)
         end
         checkResolution(configs)
     end
-    framesize = view:getFrameSize()
+
     setDesignResolution(configs, framesize)
 
     printInfo(string.format("# design resolution size       = {width = %0.2f, height = %0.2f}", configs.width, configs.height))

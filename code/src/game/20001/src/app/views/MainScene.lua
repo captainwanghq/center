@@ -16,7 +16,7 @@ end
 
 function MainScene:onEnter( ... )
     -- body
-         lanuch_module("game.20002")
+        -- lanuch_module("game.20002")
 
 end
 

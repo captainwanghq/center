@@ -9,16 +9,26 @@ end
 
 function MainScene:onEnter( ... )
     -- body
-    --lanuch_module("game.20001")
     local handle  = self:on("event1",handler(self,self.test),"0014")
     local handle  = self:on("event1",handler(self,self.test),"0015")
     local event={}
     event.name = "event1"
     event.pars = {msg="ttf1"}
     self:emit(event)
-    lanuch_module("game.20002")
+    local han = utils.gen_wrap_handler(function ( ... )
+        -- body
+        local args = {...}
+        print("MainScene",args[1],args[2])
+    end,"hhh","696")
+    cs.timer_mgr:loop(1,han,"main",self)
 end
 
+function MainScene:loop( ... )
+    -- body
+    local args = {...}
+   -- print("loop",args[1],args[2])
+  
+end
 function MainScene:test( event )
     -- body
     event.name = string.lower(tostring(event.name))
